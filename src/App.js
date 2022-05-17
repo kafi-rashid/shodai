@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, lazy } from 'react';
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { basename } from './config/server';
+import Loader from './components/Loader'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const Login = lazy(() => import('./screens/Login'));
+const Home = lazy(() => import('./screens/Home'));
 
-export default App;
+const AllRoutes = () => (
+  <HashRouter basename={ basename }>
+    <Suspense fallback={ <Loader/> }>
+      <Switch>
+        <Route path="/" component={ Login } exact />
+        <Route path="/home" component={ Home } />
+      </Switch>
+    </Suspense>
+  </HashRouter>
+)
+
+export default AllRoutes;

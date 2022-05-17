@@ -1,0 +1,137 @@
+:root {
+  --calculator-width: 250px;
+  --calculator-height: 420px;
+}
+
+#calc {
+  position: fixed;
+  top: 95px;
+  right: 20px;
+  z-index: 99;
+  background-color: rgb(116, 113, 113);
+  width: var(--calculator-width);
+  height: var(--calculator-height);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgb(194, 187, 187);
+  /* border: thin dashed transparent; */
+}
+
+#calc:focus {
+  outline: 4px solid var(--theme-blue) !important;
+  box-shadow: none;
+}
+
+#calc .inputs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#calc .inputs button {
+  background-color: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  font-weight: bold;
+  color: rgb(128, 126, 126);
+  min-width: calc(var(--calculator-width) / 4) !important;
+  height: calc(var(--calculator-height) / 7);
+}
+
+#calc button {
+  background: linear-gradient(45deg, #f4f4f4 0%, #fefefe 100%);
+}
+
+#calc .inputs button.operator {
+  background: linear-gradient(45deg, #9c4cea 0%, #853fcc 100%);
+  color: #fff;
+}
+
+#calc .inputs button:last-child {
+  width: calc(var(--calculator-width) / 2);
+  background: rgb(236, 233, 49) !important;
+  color: #000;
+}
+
+#calc .inputs button.ac {
+  width: calc(var(--calculator-width) / 2);
+}
+
+#calc .display {
+  font-size: 3rem;
+  font-weight: 300;
+  padding: 15px;
+  color: #ffffff;
+  background: #000;
+  height: 100px;
+}
+#calc .display-text {
+  flex-grow: 5;
+  text-align: right;
+  line-height: 1;
+  height: 40px !important;
+}
+#calc .display-overall {
+  font-size: 12px;
+  height: 20px;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#calc .row {
+  display: flex;
+}
+
+#calc .inputs {
+  display: flex;
+}
+
+#calc .sides {
+  display: flex;
+  flex-direction: column;
+}
+#calc .sides .ac {
+  flex-grow: 1;
+}
+#calc .sides .equal {
+  flex-grow: 2;
+  color: #ffffff;
+  background: linear-gradient(0.35turn, #FBAB7E, #F7CE68);
+}
+
+#calc .operator button,
+#calc .sides button {
+  background: #f9f9f9;
+}
+
+#calc .operator button.active {
+  background: linear-gradient(0.35turn, #FBAB7E, #F7CE68);
+  color: #ffffff;
+}
+
+#calc .actions {
+  display: flex;
+  padding: 5px 0 0 5px;
+  background-color: #000;
+}
+
+#calc .actions button {
+  border: none;
+  color: #000;
+  height: 15px !important;
+  width: 15px !important;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  padding: 0;
+}
+
+#calc .actions i {
+  font-size: 10px;
+}
