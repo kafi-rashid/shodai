@@ -1,10 +1,9 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import OrderItem from '../components/OrderItem';
 import Product from '../components/Product';
 import Customers from '../components/Customers';
-import { products, categories, mfs } from '../fakedb/Data';
-import { Modal, Checkbox, Dropdown } from 'semantic-ui-react'
+import { products, categories } from '../fakedb/Data';
+import { Modal } from 'semantic-ui-react'
+import CustomerGroup from '../components/CustomerGroup';
 
 export default class POS extends React.Component {
   constructor(props) {
@@ -13,7 +12,15 @@ export default class POS extends React.Component {
       username: '',
       category: '',
       products: products,
-      orderItems: [],
+
+      isSearching: false,
+
+      // order items
+      orderItems: localStorage.getItem('orderItems') ? JSON.parse(localStorage.getItem('orderItems')) : [],
+      subTotal: 0,
+      totalQty: 0,
+      totalPrice: 0,
+
       paymentMethod: 'Cash',
       scrollLeft: 0,
       scrollRight: 100,
@@ -28,28 +35,52 @@ export default class POS extends React.Component {
       payable: 0,
       cashGiven: 0,
       toReturn: 0,
+      discount: '',
 
       mfs: '',
     };
   }
 
   componentDidMount = () => {
-    document.getElementById('navigator').addEventListener('scroll', this.onScroll);
-    document.getElementById('navigator').addEventListener('wheel', this.onMouseWheel);
+    document.getElementById('navigator') && document.getElementById('navigator').addEventListener('scroll', this.onScroll);
+    document.getElementById('navigator') && document.getElementById('navigator').addEventListener('wheel', this.onMouseWheel);
     document.getElementById('order-payment').addEventListener('wheel', this.onMouseWheel2);
+    this.calculate()
   }
 
   componentWillUnmount = () => {
-    document.getElementById('navigator').removeEventListener('scroll', this.onScroll);
-    document.getElementById('navigator').removeEventListener('wheel', this.onMouseWheel);
+    document.getElementById('navigator') && document.getElementById('navigator').removeEventListener('scroll', this.onScroll);
+    document.getElementById('navigator') && document.getElementById('navigator').removeEventListener('wheel', this.onMouseWheel);
     document.getElementById('order-payment').removeEventListener('wheel', this.onMouseWheel2);
   }
 
   componentDidUpdate() {
+    document.getElementById('navigator') && document.getElementById('navigator').addEventListener('scroll', this.onScroll);
+    document.getElementById('navigator') && document.getElementById('navigator').addEventListener('wheel', this.onMouseWheel);
     window.history.pushState(null, document.title, window.location.href);
     window.addEventListener('popstate', function(event) {
       window.history.pushState(null, document.title, window.location.href);
     });
+  }
+
+  storeOrderItems = () => {
+    const orderItems = this.state.orderItems;
+    localStorage.setItem('orderItems', JSON.stringify(orderItems));
+  }
+
+  searching = (event) => {
+    // if(event) {
+      this.setState({
+        isSearching: event
+      })
+    // }
+    // else {
+    //   setTimeout(() => {
+    //     this.setState({
+    //       isSearching: event
+    //     })
+    //   }, 1000);
+    // }
   }
 
   onScroll = (event) => {
@@ -82,7 +113,62 @@ export default class POS extends React.Component {
   onChange = (event, result) => {
     const { name, value } = result || event.target;
     this.setState({ [name]: value });
-  };
+  }
+
+  onChangeQty = (product, event) => {
+    const value = event.target.value;
+    const orderItems = this.state.orderItems;
+    orderItems.map(item => {
+      if(item.id === product.id) item.qty = value
+    })
+    this.setState({ orderItems }, () => {
+      this.calculate();
+    })
+  }
+
+  inc = (product) => {
+    const orderItems = this.state.orderItems;
+    orderItems.map(item => {
+      if(item.id === product.id) item.qty = parseInt(item.qty) + 1;
+    })
+    this.setState({ orderItems }, () => {
+      this.calculate();
+    })
+  }
+
+  dec = (product) => {
+    const orderItems = this.state.orderItems;
+    orderItems.map(item => {
+      if(item.id === product.id && item.qty > 1) item.qty = parseInt(item.qty) - 1;
+    })
+    this.setState({ orderItems }, () => {
+      this.calculate();
+    })
+  }
+
+  deleteProduct = (id) => {
+    const orderItems = this.state.orderItems;
+    this.setState({
+      orderItems: orderItems.filter(item => item.id !== id)
+    }, () => {
+      this.calculate();
+    })
+  }
+
+  calculate = () => {
+    let totalQty = this.state.orderItems.reduce(function(prev, current) { return prev + (+current.qty) }, 0);
+    let subTotal = this.state.orderItems.reduce(function(prev, current) { return prev + (+current.price) }, 0);
+    let totalPrice = 0;
+    this.state.orderItems.map(item => {
+      totalPrice += (item.qty * item.price)
+    })
+    this.setState({
+      totalQty,
+      subTotal,
+      totalPrice
+    })
+    this.storeOrderItems();
+  }
 
   setCustomer = (event) => {
     this.setState({
@@ -129,6 +215,12 @@ export default class POS extends React.Component {
     })
   }
 
+  getIcon = (category) => {
+    const find = categories.find(cat => cat.name === category);
+    if(find) return find.icon + '.png';
+    else return 'grocery.png';
+  }
+
   addToCart = (event) => {
     const orderItems = JSON.parse(JSON.stringify(this.state.orderItems));
     const isExist = orderItems.find(item => item.id === event.id);
@@ -146,7 +238,11 @@ export default class POS extends React.Component {
       element && element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       setTimeout(() => {
         element && element.classList.remove('active')
-      }, 500);
+      }, 1000);
+      this.calculate()
+      this.setState({
+        isSearching: false
+      })
     })
   }
 
@@ -160,77 +256,184 @@ export default class POS extends React.Component {
     }
   }
 
+  handleKeyPress = (event) => {
+    if (event.key == '-') {
+      this.props.manageOrderItem('d', event.target.getAttribute('prod-id'));
+    }
+  };
+
   render() {
     return (
       <div className='d-flex flex-grow-1'>
         <div className='flex-grow-1 mr-20px'>
-          <div className='d-flex' id='navigator-container'>
-            <div className='navigate navigate-left' style={{ visibility: this.state.scrollLeft > 60 ? 'unset' : 'hidden' }}>
-              <i className='material-icons'>chevron_left</i>
-            </div>
-            <div className='navigator scroll-horiz' id='navigator' onScroll={ this.onScroll }>
-              {
-                categories.map((item, i) => (
-                  <button
-                    key={ 'CAT_' + item.id }
-                    onClick={ () => { this.getProducts(item.name) } }
-                    className={ (this.state.category === '' && item.name === 'All Items') ? 'active' : item.name === this.state.category ? 'active' : '' }
-                    style={{ marginRight: i === categories.length - 1 ? 0 : 10 }}
-                  >
-                    <div>
-                      <img alt={ item.name } src={ require('../assets/img/cat/'+item.icon+'.png') }/>
-                    </div>
-                    { item.name }
-                  </button>
-                ))
-              }
-            </div>
-            <div className='navigate navigate-right' style={{ visibility: this.state.scrollLeft + 60 < this.state.scrollRight ? 'unset' : 'hidden' }}>
-              <i className='material-icons'>chevron_right</i>
-            </div>
-          </div>
-          <div className='content-body content-body-w-nav bg-transparent border-radius-0 pos-products'>
+
           {
-            this.state.products.map((item, i) => (
-              <Product addToCart={ this.addToCart } key={ 'P_' + item.id } product={ item }/>
-            ))
+            this.state.isSearching &&
+            <div className='d-flex' id='navigator-container'>
+              <div className='navigate navigate-left' style={{ visibility: this.state.scrollLeft > 60 ? 'unset' : 'hidden' }}>
+                <i className='material-icons'>chevron_left</i>
+              </div>
+              <div className='navigator scroll-horiz' id='navigator' onScroll={ this.onScroll }>
+                <button
+                  onClick={ () => { this.setState({ isSearching: false }) } }
+                  style={{ marginRight: 0, minWidth: 'unset', padding: '1px', marginRight: '10px' }}
+                >
+                  <div style={{ marginRight: 0, backgroundColor: 'red' }}>
+                    <i className='material-icons color-white'>close</i>
+                  </div>
+                </button>
+                {
+                  categories.map((item, i) => (
+                    <button
+                      key={ 'CAT_' + item.id }
+                      onClick={ () => { this.getProducts(item.name) } }
+                      className={ (this.state.category === '' && item.name === 'All Items') ? 'active' : item.name === this.state.category ? 'active' : '' }
+                      style={{ marginRight: i === categories.length - 1 ? 0 : 10 }}
+                    >
+                      <div>
+                        <img alt={ item.name } src={ require('../assets/img/cat/'+item.icon+'.png') }/>
+                      </div>
+                      { item.name }
+                    </button>
+                  ))
+                }
+              </div>
+              <div className='navigate navigate-right' style={{ visibility: this.state.scrollLeft + 60 < this.state.scrollRight ? 'unset' : 'hidden' }}>
+                <i className='material-icons'>chevron_right</i>
+              </div>
+            </div>
           }
+
+          <div className={ 'content-body bg-transparent border-radius-0 p-0' + (this.state.isSearching ? ' content-body-w-nav pos-products' : '') }>
+            {
+              this.state.isSearching ?
+              this.state.products.map((product, i) => (
+                <Product 
+                  addToCart={ this.addToCart }
+                  // onDoubleClick={ this.addToCart }
+                  // onClick={ () => { this.itemSelected(product) } } 
+                  key={ 'P_' + product.id }
+                  product={ product }
+                />
+              ))
+              :
+              <div className='table-sticky content-body-max-height'>
+                <table className='table table-v-center' style={{ tableLayout: 'fixed' }}>
+                  <thead>
+                    <tr>
+                      <th width="20">SN.</th>
+                      <th>Name</th>
+                      <th width="100" className='text-right'>Price</th>
+                      <th width="110" className='text-center'>Qty</th>
+                      <th width="100" className='text-right'>Total</th>
+                      <th width="50"><i className='material-icons'>keyboard_control</i></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      this.state.orderItems.map((product, i) => (
+                        <tr key={ 'Prod_' + i } id={ 'OI_' + product.id }>
+                          <td>{ i + 1 }</td>
+                          <td className='font-weight-bold text-overflow-hidden'>
+                            <img
+                              alt={ product.category }
+                              src={ require('../assets/img/cat/'+this.getIcon(product.category) ) }
+                              style={{ width: 20, marginRight: 10 }} />
+                            { product.name }
+                          </td>
+                          <td className='text-right'>
+                            ৳&nbsp;{ (product.price).toFixed(2) }
+                          </td>
+                          <td className='text-center'>
+                            <div className='order-item-qty'>
+                              <button className='dec' onClick={ () => { this.dec(product) } }>-</button>
+                              <input type='text' onChange={ (e) => { this.onChangeQty(product, e) } } value={ product.qty } />
+                              <button className='inc' onClick={ () => { this.inc(product) } }>+</button>
+                            </div>
+                          </td>
+                          <td className='text-right'>
+                            ৳&nbsp;{ (product.qty * product.price).toFixed(2) }
+                          </td>
+                          <td>
+                            <i
+                              onClick={ () => { this.deleteProduct(product.id) } }
+                              className='material-icons'>
+                              close
+                            </i>
+                          </td>
+                        </tr>
+                      ))
+                    }
+                    {
+                      this.state.orderItems.length === 0 &&
+                      <tr className='no-hover'>
+                        <td className='text-center' colSpan={ 6 }>
+                          <div className='p-5 d-flex justify-content-center align-items-center'>
+                            <img src={ require('../assets/img/misc/package.png') } className="empty-cart mr-4" alt="Cart is empty" />
+                            <p className='text-left'>Cart is empty!<br/>Search for some products or scan barcode.</p>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                  {
+                    this.state.orderItems.length > 0 &&
+                    <tfoot>
+                      <tr>
+                        <th colSpan={ 3 }><p className='font-small font-weight-bold'>Total</p></th>
+                        <th className='text-center'>{ this.state.totalQty }</th>
+                        <th className='text-right'>৳&nbsp;{ (this.state.totalPrice).toFixed(2) }</th>
+                        <th className='text-right'></th>
+                      </tr>
+                    </tfoot>
+                  }
+                  </table>
+              </div>
+            }
           </div>
         </div>
 
         <div className='content-body orders-container p-0'>
           
           <div className='orders-header'>
-            <p className='title'>Cart</p>
-            <Customers setCustomer={ this.setCustomer } />
+            <p className='title'>Order & Payment</p>
           </div>
 
           <div className='orders-items' id='orders-items'>
-            {
-              this.state.orderItems.map((item, i) => (
-                <OrderItem
-                  manageOrderItem={ this.manageOrderItem }
-                  key={ 'OI_' + item.id }
-                  item={ item }
-                  class={ i === this.state.orderItems.length - 1 ? 'mb-0' : 'mb-10px' }
-                />
-              ))
-            }
-            <div ref={ this.myRef }></div>
+            <Customers setCustomer={ this.setCustomer } />
+            <CustomerGroup/>
+            <div className='form-group '>
+              <input
+                type='number'
+                className='form'
+                onChange={ this.onChange }
+                placeholder='Discount'
+                name='discount'
+                value={ this.state.discount }
+              />
+            </div>
           </div>
 
           <div className='order-summary'>
             <p>
               <span>Sub Total</span>
-              <span>৳ { this.state.orderItems.reduce(function(prev, current) { return prev + (+current.price * current.qty) }, 0).toFixed(2) }</span>
+              <span>৳ { (this.state.totalPrice).toFixed(2) }</span>
             </p>
             <p>
               <span>VAT</span>
-              <span>৳ { (this.state.orderItems.reduce(function(prev, current) { return prev + (+current.price * current.qty) }, 0) * 0.05).toFixed(2) }</span>
+              <span>৳ { (this.state.totalQty * 0.05).toFixed(2) }</span>
             </p>
             <p className='order-total'>
               <span>Total</span>
-              <span>৳ { (this.state.orderItems.reduce(function(prev, current) { return prev + (+current.price * current.qty) }, 0) + this.state.orderItems.reduce(function(prev, current) { return prev + (+current.price * current.qty) }, 0) * 0.05).toFixed(2) }</span>
+              <span>৳ { (this.state.totalPrice + (this.state.totalPrice * 0.05)).toFixed(2) }</span>
+            </p>
+            <p>
+              <span>Discount</span>
+              <span>৳ { (parseFloat(this.state.discount) || 0).toFixed(2) }</span>
+            </p>
+            <p className='order-total'>
+              <span>Net Payable</span>
+              <span>৳ { (this.state.totalPrice + (this.state.totalPrice * 0.05) - (parseFloat(this.state.discount) || 0)).toFixed(2) }</span>
             </p>
           </div>
 

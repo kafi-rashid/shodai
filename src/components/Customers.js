@@ -34,18 +34,21 @@ export default class Customers extends React.Component {
 
   render() {
     return (
-      <Dropdown
-        search
-        name="customerId"
-        onChange={ this.onChange }
-        placeholder='Customer'
-        fluid
-        selection
-        clearable
-        options={ this.state.customers }
-        value={ this.state.customerId }
-        className="orders-member ml-3"
-      />
+      <div className='form-group'>
+        {/* <label>Customer</label> */}
+        <Dropdown
+          search
+          name="customerId"
+          onChange={ this.onChange }
+          placeholder='Customer'
+          fluid
+          selection
+          clearable
+          options={ this.state.customers.slice(0, 3) }
+          value={ this.state.customerId }
+          className="orders-member"
+        />
+      </div>
     );
   }
 }

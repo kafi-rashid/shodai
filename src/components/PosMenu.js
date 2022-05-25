@@ -6,7 +6,16 @@ export default class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      class: ''
     };
+  }
+
+  componentDidMount = () => {
+    if(localStorage.getItem('toggleMenu')) {
+      this.setState({
+        class: localStorage.getItem('toggleMenu') === '0' ? 'menu-toggle' : ''
+      })
+    }
   }
 
   render() {

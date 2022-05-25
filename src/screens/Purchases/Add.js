@@ -69,7 +69,7 @@ export default class Home extends React.Component {
 
     let totalPrice = 0;
     this.state.products.map(item => {
-      totalPrice += (item.qty * item.price)
+      totalPrice += (item.qty * item.price) + (item.qty * item.price * (item.vat / 100))
     })
 
     this.setState({
@@ -215,6 +215,7 @@ export default class Home extends React.Component {
                               <th>Brand</th>
                               <th>Price</th>
                               <th>Qty</th>
+                              <th>VAT</th>
                               <th>Total</th>
                               <th width="20">
                                 <i className='material-icons'>keyboard_control</i>
@@ -246,7 +247,16 @@ export default class Home extends React.Component {
                                       value={ product.qty }/>
                                   </td>
                                   <td>
-                                    { product.qty * product.price }
+                                    <input
+                                      disabled={ this.state.isViewOnly }
+                                      className='form width-small text-right m-0 h-35px'
+                                      type='text'
+                                      onChange={ (e) => { this.onChangeProd('products', 'vat', i, e) } }
+                                      value={ product.vat }/>
+                                    &nbsp;%
+                                  </td>
+                                  <td>
+                                    { (product.qty * product.price) + (product.qty * product.price * (product.vat / 100)) }
                                   </td>
                                   <td>
                                     {
@@ -265,6 +275,7 @@ export default class Home extends React.Component {
                               <td className='text-right' colSpan="4">Total</td>
                               <td className=''>{ this.state.subTotal }</td>
                               <td>{ this.state.totalQty }</td>
+                              <td></td>
                               <td colSpan='2'>{ this.state.totalPrice }</td>
                             </tr>
                           </tbody>

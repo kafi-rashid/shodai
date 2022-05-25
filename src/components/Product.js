@@ -36,7 +36,13 @@ export default class OrderItem extends React.Component {
 
   render() {
     return (
-      <div tabIndex={ 1 } onDoubleClick={ this.addToCart } onKeyPress={ this.enterToAdd } className={ 'product '+this.props.class }>
+      <div
+        tabIndex={ 1 }
+        onDoubleClick={ this.addToCart } 
+        onKeyPress={ this.enterToAdd }
+        className={ 'product '+this.props.class }
+        { ...this.props }
+      >
         <div className='image'>
           <img alt={ this.state.item.category } src={ require('../assets/img/cat/'+this.getIcon(this.state.item.category) ) }/>
         </div>

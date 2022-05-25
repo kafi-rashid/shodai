@@ -11,6 +11,8 @@ const Products = lazy(() => import('./Products/Products'));
 const People = lazy(() => import('./People/People'));
 const Purchases = lazy(() => import('./Purchases/Purchases'));
 const Reports = lazy(() => import('./Reports/Reports'));
+const Settings = lazy(() => import('./Settings/Settings'));
+const About = lazy(() => import('./About'));
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -29,10 +31,14 @@ export default class Home extends React.Component {
     this.child.current && this.child.current.addToCart(event);
   }
 
+  searching = (event) => {
+    this.child.current && this.child.current.searching(event);
+  }
+
   render() {
     return (
       <div className='super-container'>
-        <Header history={ this.props.history } addToCart={ this.addToCart }/>
+        <Header history={ this.props.history } searching={ this.searching } addToCart={ this.addToCart }/>
         <div className='content-container'>
           <PosMenu/>
           <div className='content'>
@@ -43,6 +49,8 @@ export default class Home extends React.Component {
                 <Route path="/home/people" component={ People } />
                 <Route path="/home/purchases" component={ Purchases } />
                 <Route path="/home/reports" component={ Reports } />
+                <Route path="/home/settings" component={ Settings } />
+                <Route path="/home/about" render={ (props) => <About redirect={ true }/> } />
                 {/* <Route path="**" render={() => (<Redirect to="/home" />)} /> */}
               </Suspense>
             </Switch>

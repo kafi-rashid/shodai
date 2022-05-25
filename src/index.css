@@ -343,6 +343,10 @@ input:read-only,
   margin-bottom: 40px;
 }
 
+.width-xs {
+  width: 60px !important;
+}
+
 .width-small {
   width: 80px !important;
 }
@@ -485,7 +489,7 @@ input:read-only,
 
 .ui.modal {
   position: relative;
-  border-radius: 8px;
+  border-radius: 15px;
   flex: unset;
   height: 50vh;
   border: 4px solid var(--theme-blue);
@@ -867,7 +871,6 @@ input:read-only,
 }
 
 #header .mid-container {
-  /* border: thin dashed red; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -891,21 +894,16 @@ input:read-only,
 }
 
 #header .header-search input:focus {
-  /* border: 1px solid #db9935; */
-  outline: 2px solid #db9935;
+  /* outline: 2px solid #db9935; */
   border-radius: 8px;
   z-index: 8;
   min-width: calc(25vw + 38px);
   outline-offset: -1px;
-  min-width: 549px;
+  min-width: 550px;
 }
 
 #header .header-search input:focus + button {
   display: none !important;
-}
-
-#header .header-search button {
-  /* border-radius: 0 8px 8px 0; */
 }
 
 /* NAVIGATOR */
@@ -938,7 +936,7 @@ input:read-only,
   border-radius: 30px;
   display: flex;
   align-items: center;
-  padding: 3px 20px 3px 3px;
+  padding: 3px 20px 3px 2px;
   color: #000;
   font-size: var(--font-medium);
   font-weight: 600;
@@ -1094,9 +1092,14 @@ input:read-only,
 }
 
 .content-body-height {
-  /* height: calc(100vh - var(--header-height) - 130px); */
   min-height: unset;
   max-height: calc(100vh - var(--header-height) - 130px);
+  scrollbar-width: none !important;
+}
+
+.content-body-max-height {
+  min-height: unset;
+  max-height: calc(100vh - var(--header-height) - 40px);
   scrollbar-width: none !important;
 }
 
@@ -1659,6 +1662,33 @@ tr.active td {
   font-size: var(--font-medium);
   border: none;
   background-color: var(--body-bg-color)
+}
+
+
+#header-search-result .product {
+  position: relative;
+  overflow: hidden;
+}
+
+
+#header-search-result .product .action {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#header-search-result .product .action input {
+  width: 70%;
+  border: 1.5px solid rgb(160, 160, 160);;
+  border-radius: 8px;
+  height: 38px;
+  margin: 0 10px 0 0;
+  padding: 0 10px;
+  font-size: var(--font-medium);
+  border: none;
+  background-color: var(--body-bg-color);
+  min-width: unset !important;
 }
 
 

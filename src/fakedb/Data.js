@@ -100,21 +100,21 @@ export const categories = [
 ]
 
 export const products = [
-  { id: 1, type: 'Standard', brand: 'Aarong', category: 'Dairy', name: 'Butter (Unsalted)', price: 100, qty: 3 },
-  { id: 2, type: 'Standard', brand: 'Aarong', category: 'Dairy', name: 'Yogurt', price: 130, qty: 2 },
-  { id: 3, type: 'Standard', brand: 'Local', category: 'Fruits & Veg', name: 'Lemon (Dozen)', price: 90, qty: 1 },
-  { id: 4, type: 'Standard', brand: 'Coca-Cola', category: 'Beverage', name: 'Tea Bag', price: 10, qty: 3 },
-  { id: 5, type: 'Standard', brand: 'Kazi Farm', category: 'Frozen', name: 'Parata', price: 260, qty: 2 },
-  { id: 6, type: 'Standard', brand: 'BD Food', category: 'Snacks', name: 'Tip Biscuit', price: 15, qty: 4 },
-  { id: 7, type: 'Standard', brand: 'Pran', category: 'Beverage', name: 'Lemon Juice', price: 35, qty: 1 },
-  { id: 8, type: 'Standard', brand: 'Kazi Farm', category: 'Frozen', name: 'Sausage', price: 230, qty: 2 },
-  { id: 9, type: 'Standard', brand: 'Jhotpot', category: 'Frozen', name: 'Kebab', price: 260, qty: 2 },
-  { id: 10, type: 'Standard', brand: 'Pran', category: 'Dairy', name: 'Par. Cheese', price: 130, qty: 2 },
-  { id: 11, type: 'Standard', brand: 'Local', category: 'Meat & Fish', name: 'Eggs (Dozen)', price: 90, qty: 1 },
-  { id: 12, type: 'Standard', brand: 'Davidoff', category: 'Beverage', name: 'Coffee', price: 10, qty: 3 },
-  { id: 13, type: 'Standard', brand: 'Lays', category: 'Snacks', name: 'Chips', price: 15, qty: 4 },
-  { id: 14, type: 'Standard', brand: 'Coca-Cola', category: 'Beverage', name: 'Diet Coke', price: 35, qty: 1 },
-  { id: 15, type: 'Standard', brand: 'Golden Harvest', category: 'Frozen', name: 'Samosa', price: 120, qty: 2 },
+  { id: 1, type: 'Standard', brand: 'Aarong', category: 'Dairy', name: 'Butter (Unsalted)', price: 100, qty: 3, vat: 0 },
+  { id: 2, type: 'Standard', brand: 'Aarong', category: 'Dairy', name: 'Yogurt', price: 130, qty: 2, vat: 0 },
+  { id: 3, type: 'Standard', brand: 'Local', category: 'Fruits & Veg', name: 'Lemon (Dozen)', price: 90, qty: 1, vat: 0 },
+  { id: 4, type: 'Standard', brand: 'Coca-Cola', category: 'Beverage', name: 'Tea Bag', price: 10, qty: 3, vat: 0 },
+  { id: 5, type: 'Standard', brand: 'Kazi Farm', category: 'Frozen', name: 'Parata', price: 260, qty: 2, vat: 0 },
+  { id: 6, type: 'Standard', brand: 'BD Food', category: 'Snacks', name: 'Tip Biscuit', price: 15, qty: 4, vat: 0 },
+  { id: 7, type: 'Standard', brand: 'Pran', category: 'Beverage', name: 'Lemon Juice', price: 35, qty: 1, vat: 0 },
+  { id: 8, type: 'Standard', brand: 'Kazi Farm', category: 'Frozen', name: 'Sausage', price: 230, qty: 2, vat: 0 },
+  { id: 9, type: 'Standard', brand: 'Jhotpot', category: 'Frozen', name: 'Kebab', price: 260, qty: 2, vat: 0 },
+  { id: 10, type: 'Standard', brand: 'Pran', category: 'Dairy', name: 'Par. Cheese', price: 130, qty: 2, vat: 0 },
+  { id: 11, type: 'Standard', brand: 'Local', category: 'Meat & Fish', name: 'Eggs (Dozen)', price: 90, qty: 1, vat: 0 },
+  { id: 12, type: 'Standard', brand: 'Davidoff', category: 'Beverage', name: 'Coffee', price: 10, qty: 3, vat: 0 },
+  { id: 13, type: 'Standard', brand: 'Lays', category: 'Snacks', name: 'Chips', price: 15, qty: 4, vat: 0 },
+  { id: 14, type: 'Standard', brand: 'Coca-Cola', category: 'Beverage', name: 'Diet Coke', price: 35, qty: 1, vat: 0 },
+  { id: 15, type: 'Standard', brand: 'Golden Harvest', category: 'Frozen', name: 'Samosa', price: 120, qty: 2, vat: 0 },
 ]
 
 export const productTypes = [
@@ -186,6 +186,11 @@ export const customers = [
   { id: 4, username: 'apala', name: 'Apala Sen', gender: 'Female', customerId: '01719556677', contactNumber: '01719556677', address: { line1: '13c/2c (Ground Floor), Block - B', line2: 'Babar Road', thana: 'Mohammadpur', district: 'Dhaka', postCode: '1020' }, role: [{ roleName: 'Salesperson' }] },
   { id: 5, username: 'ali', name: 'Mohammad Ali', gender: 'Male', customerId: '01719887755', contactNumber: '01719887755', address: { line1: '205/5, Fakirapool', line2: '', thana: 'motijheel', district: 'Dhaka', postCode: '1433' }, role: [{ roleName: 'Salesperson' }] },
   { id: 6, username: 'rono', name: 'Rono Shikder', gender: 'Male', customerId: '01719226677', contactNumber: '01719226677', address: { line1: '30 Avenue ', line2: 'Hossain Market', thana: 'Badda', district: 'Dhaka', postCode: '1333' }, role: [{ roleName: 'Salesperson' }] },
+]
+
+export const customerGroup = [
+  { key: 'Friends & Family', value: 'Friends & Family', text: 'Friends & Family' },
+  { key: 'Card Holder', value: 'Card Holder', text: 'Card Holder' },
 ]
 
 export const mfs = [

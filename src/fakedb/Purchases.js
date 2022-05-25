@@ -13,7 +13,8 @@ export const Purchases = [
         "category":"Dairy",
         "name":"Butter (Unsalted)",
         "price":100,
-        "qty":"10"
+        "qty":"10",
+        "vat":"1"
       },
       {
         "id":4,
@@ -22,7 +23,8 @@ export const Purchases = [
         "category":"Beverage",
         "name":"Tea Bag",
         "price":10,
-        "qty":"20"
+        "qty":"20",
+        "vat":"1"
       },
       {
         "id":5,
@@ -31,7 +33,8 @@ export const Purchases = [
         "category":"Frozen",
         "name":"Parata",
         "price":260,
-        "qty":"30"
+        "qty":"30",
+        "vat":"1"
       }
     ],
     "note":""
@@ -50,7 +53,8 @@ export const Purchases = [
         "category":"Frozen",
         "name":"Parata",
         "price":260,
-        "qty":"10"
+        "qty":"10",
+        "vat":"1"
       },
       {
         "id":12,
@@ -59,7 +63,8 @@ export const Purchases = [
         "category":"Beverage",
         "name":"Coffee",
         "price":10,
-        "qty":1
+        "qty":1,
+        "vat":"1"
       },
       {
         "id":9,
@@ -68,7 +73,8 @@ export const Purchases = [
         "category":"Frozen",
         "name":"Kebab",
         "price":260,
-        "qty":1
+        "qty":1,
+        "vat":"1"
       }
     ],
     "note":""

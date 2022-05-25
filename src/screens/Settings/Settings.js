@@ -2,12 +2,9 @@ import React, { Component, Suspense, lazy } from 'react';
 import { Switch, Route, Redirect, NavLink } from 'react-router-dom';
 import { Routes } from '../../config/Routes';
 
-const List = lazy(() => import('./List'));
-const Add = lazy(() => import('./Add'));
-const Categories = lazy(() => import('./Categories'));
-const Brands = lazy(() => import('./Brands'));
+const Profit = lazy(() => import('./Profit'));
 
-class Accounts extends Component {
+class Settings extends Component {
 	constructor() {
 		super();
 		this.state = {
@@ -36,7 +33,7 @@ class Accounts extends Component {
 
   getChildRoutes = () => {
     Routes.map(route => {
-      if(route.title === 'Products') {
+      if(route.title === 'Settings') {
         this.setState({
           childRoutes: route.children
         })
@@ -50,7 +47,7 @@ class Accounts extends Component {
 
         <div className='d-flex flex-grow-1'>
           <div className='flex-grow-1'>
-            <div id='child-navigator' className={ localStorage.getItem('toggleMenu') ? (localStorage.getItem('toggleMenu') === '1' ? 'full-width' : '') : '' }>
+            <div id='child-navigator'>
               {
                 this.state.childRoutes.map((item, i) => (
                   <NavLink
@@ -64,14 +61,11 @@ class Accounts extends Component {
             </div>
             <div className='row'>
               <Switch>
-                <Route path={ '/home/products' } render={({ match: { url } }) => 
+                <Route path={ '/home/settings' } render={({ match: { url } }) => 
                   (
                     <>
-                      <Route exact path={`${ url }`} render={() => (<Redirect to="/home/products/list" />)} />
-                      <Route exact path={`${ url }/list`} component={ List } />
-                      <Route exact path={`${ url }/add`} component={ Add } />
-                      <Route exact path={`${ url }/categories`} component={ Categories } />
-                      <Route exact path={`${ url }/brands`} component={ Brands } />
+                      <Route exact path={`${ url }`} render={() => (<Redirect to="/home/settings/profit" />)} />
+                      <Route exact path={`${ url }/profit`} component={ Profit } />
                     </>
                   )
                 }
@@ -85,4 +79,4 @@ class Accounts extends Component {
 	}
 }
 
-export default Accounts;
+export default Settings;

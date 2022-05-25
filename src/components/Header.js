@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AddPurchase from './AddPurchase';
+import HeaderSearch from './HeaderSearch';
 import Calc from './Calc';
 
 export default class Header extends React.Component {
@@ -51,6 +51,8 @@ export default class Header extends React.Component {
     }
     this.setState({
       isHidden: !this.state.isHidden
+    }, () => {
+      // localStorage.setItem('toggleMenu', this.state.isHidden ? '0' : '1')
     })
   }
 
@@ -80,10 +82,11 @@ export default class Header extends React.Component {
 
         <div className='mid-container pl-5 pr-5'>
           <div className='header-search'>
-            <AddPurchase
+            <HeaderSearch
               icon='search'
               shadow={ false }
               addToCart={ this.props.addToCart }
+              searching={ this.props.searching }
               isHeader={ true }
               />
           </div>
@@ -98,9 +101,9 @@ export default class Header extends React.Component {
           <button className='button button-blue mr-3' onClick={ () => this.calculator() }>
             <i className='material-icons'>calculate</i>
           </button>
-          <button className='button button-orange mr-3'>
+          {/* <button className='button button-orange mr-3'>
             <i className='material-icons'>shopping_basket</i>
-          </button>
+          </button> */}
           <button className='button button-red mr-4'>
             <i className='material-icons'>notifications</i>
           </button>
@@ -152,6 +155,7 @@ export default class Header extends React.Component {
           this.state.calculator &&
           <Calc calculator={ this.calculator }/>
         }
+
       </div>
     );
   }

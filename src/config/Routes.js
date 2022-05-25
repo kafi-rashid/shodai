@@ -43,5 +43,9 @@ export const Routes = [
       { title: 'Sales Report',                  icon: 'calendar_today',                 path: '/home/reports/sales' },
     ]
   },
-  { title: 'Settings',                          icon: 'settings',                       path: '/home/settings' },
+  { title: 'Settings',                          icon: 'settings',                       path: '/home/settings',           children: [
+      { title: 'Set Profit',                    icon: 'label_outline',                 path: '/home/settings/profit' }
+    ]
+  },
+  { title: 'About',                             icon: 'info',                       path: '/home/about' },
 ]
